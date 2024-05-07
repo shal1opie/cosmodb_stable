@@ -19,9 +19,9 @@ function view_table ($table) {
             break;
     } 
     ?>
-    <main class="container-fluid h-100 mb-5">
-        <div class="row row-cols-auto mx-5 mt-5">
-            <div class="col px-0">
+    <main class="container-fluid h-100 mb-4">
+        <div class="row row-cols-2 mx-5 mt-4">
+            <div class="col px-0 d-flex justify-content-start mt-1">
     <?php
     foreach($table_names as $key => $value) {
         switch ($key) {
@@ -36,8 +36,10 @@ function view_table ($table) {
     }
     ?>
         </div>
-
+        <div class="col d-flex justify-content-end px-0 mb-1">
+            <a href="cosmodb.php?table=<?= $table ?>&action=Добавить+строку" role="button" class="btn btn-outline-primary rounded-3">+</a>
         </div>
+    </div>
     <?php
 try {
     $result = $conn -> query($select_query);
@@ -46,7 +48,7 @@ try {
     <?php
     echo "<input type=\"hidden\" name=\"table\" value=\"".$table."\" />";
     ?>
-    <div class="table-responsive col-11 border border-primary rounded-4 px-0" data-simplebar>
+    <div class="table-responsive border border-primary rounded-4 px-0" data-simplebar>
         <table class="table table-hover table-striped mb-0">
     <?php
     $once = 0;
@@ -55,7 +57,7 @@ try {
         foreach($row as $key => $value) {
             if (is_string($key) && $once < 1) {echo "<th class=\"text-center\">$key</th>";}
         }
-        if($once < 1) {echo "</tr></thead><tbody>";}
+        if($once < 1) {echo "<th class=\"text-center\">Действие</th></tr></thead><tbody>";}
         echo "<tr>";
         $once = 1;
         foreach($row as $key => $value) {
@@ -63,11 +65,11 @@ try {
             switch (true) {
                 case (is_string($key)&&$key=='#'):
                     $id=$value;
-                    if($table=='users'&&$id==1) {
-                        echo "<td>$value</td>";
-                    } else {
-                        echo "<td class=\"px-0 text-center form-check-input\"><input class=\"input_m\" type=\"checkbox\" name=\"id_change_form[]\" value=\"$value\" readonly />$value</td>";
-                    }
+                    // if($table=='users'&&$id==1) {
+                        echo "<td class=\"text-center\">$value</td>";
+                    // } else {
+                    //     echo "<td class=\"px-0 text-center form-check-input\"><input class=\"input_m\" type=\"checkbox\" name=\"id_change_form[]\" value=\"$value\" readonly />$value</td>";
+                    // }
                     break;
                 case (is_string($key)&&$length<150&&$key!='Страна'&&$key!='Дата'):
                     if($key =='Наименование') {
@@ -92,7 +94,13 @@ try {
                     break;
             }
         }
-        
+        ?>
+        <td class="text-center">
+            <!-- если не работает, поменяй [] на %5B%5D -->
+            <a href="cosmodb.php?table=<?= $table ?>&id_change_form[]=<?=$id?>&action=Редактировать+выбранное">Изменить</a>
+            <a href="cosmodb.php?table=<?= $table ?>&id_change_form[]=<?=$id?>&action=Удалить+выбранное">Удалить</a>
+        </td>
+        <?php
         echo "</tr>";
 
     }
@@ -100,7 +108,7 @@ try {
         </tbody>
         </table>
     </div>
-    <div class="col-1 px-4">
+    <!-- <div class="col-1 px-4">
         <div class="row">
         <input 
             type="submit" 
@@ -126,7 +134,7 @@ try {
             name="action" 
             class="btn btn-outline-primary rounded-0 rounded-bottom-4"
         />
-        </div>
+        </div> -->
 
         <!-- <div class="row">
         <input 
