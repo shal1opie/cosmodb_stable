@@ -42,7 +42,7 @@ function view_table ($table) {
 try {
     $result = $conn -> query($select_query);
     ?>
-    <form action="cosmodb.php" method="get" class="row mx-4">
+    <form action="cosmodb.php" method = "get" class="row mx-4">
     <?php
     echo "<input type=\"hidden\" name=\"table\" value=\"".$table."\" />";
     ?>

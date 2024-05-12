@@ -1,0 +1,56 @@
+[
+    {
+        "user": "admin",
+        "role": 4,
+        "table": "users",
+        "action": null,
+        "time": "12-05-2024 18:59:15"
+    },
+    {
+        "user": "admin",
+        "role": 4,
+        "table": "users",
+        "action": "Удалить выбранное",
+        "id": "5",
+        "time": "12-05-2024 19:01:37"
+    },
+    {
+        "user": "admin",
+        "role": 4,
+        "table": "users",
+        "action": "Редактировать выбранное",
+        "id": "2",
+        "time": "12-05-2024 19:03:03"
+    },
+    {
+        "user": "admin",
+        "role": 4,
+        "table": "users",
+        "action": null,
+        "time": "12-05-2024 19:03:18"
+    },
+    {
+        "user": "admin",
+        "role": 4,
+        "table": "users",
+        "action": "Редактировать выбранное",
+        "id": "18",
+        "time": "12.05.2024 19:06:35"
+    },
+    {
+        "user": "admin",
+        "role": 4,
+        "table": "users",
+        "action": "Удалить выбранное",
+        "id": "18",
+        "time": "12.05.2024 19:06:55"
+    },
+    {
+        "user": "admin",
+        "role": 4,
+        "table": "users",
+        "action": "Отклонить роль",
+        "id": "2",
+        "time": "12.05.2024 19:51:43"
+    }
+]

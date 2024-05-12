@@ -1,12 +1,8 @@
 <?php
-session_start();
-
-require_once('boot.php');
-
+function create_cosmodb () {
+global $conn, $servername, $username, $password, $dbname, $db_backup;
 try {
     $conn = new PDO("mysql:host=$servername", $username, $password, array(PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION, PDO::MYSQL_ATTR_INIT_COMMAND => "SET NAMES utf8"));
-    // $conn -> exec("set names utf8");
-    // $conn->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
 
     $dbExists = $conn->query("SELECT COUNT(*) FROM INFORMATION_SCHEMA.SCHEMATA WHERE SCHEMA_NAME = '$dbname'")->fetchColumn();
     $_SESSION['db_maded'] = false;
@@ -19,7 +15,7 @@ try {
         $conn = new PDO("mysql:host=$servername;dbname=$dbname", $username, $password);
         $conn->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
 
-        $sql = file_get_contents('../back_up/cosmodb.sql');
+        $sql = file_get_contents($db_backup);
         $conn->exec($sql);
 
         $_SESSION['db_maded'] = true;
@@ -37,5 +33,5 @@ try {
     echo "Connection failed: " . $e->getMessage();
 }
 
-$conn = null;
+}
 ?>

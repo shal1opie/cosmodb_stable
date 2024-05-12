@@ -4,6 +4,7 @@ session_start();
 
 require_once('boot.php');
 require_once('globals.php');
+require_once('db_connect.php');
 
 function database_eror () {
     global $db_exists;
@@ -41,28 +42,28 @@ function main () {
     // var_dump($_SESSION);
     // echo "<br>".$_SESSION['role']."<br>";
     switch (true) {
-        case (isset($_GET['action'])&&$db_exists&&$users_set&&$user_loged_in&&$user_role>0&&!isset($_GET['logout'])&&!isset($_GET['user_profile'])):
+        case (isset($_REQUEST['action'])&&$db_exists&&$users_set&&$user_loged_in&&$user_role>0&&!isset($_REQUEST['logout'])&&!isset($_REQUEST['user_profile'])):
             change_table();
-            $form_action = $_GET['action'];
+            $form_action = $_REQUEST['action'];
             forms($form_action);
             break;
 
-        case (!isset($_GET['action'])&&$db_exists&&$users_set&&$user_loged_in&&$user_role>1&&empty($article)&&!isset($_GET['logout'])&&!isset($_GET['user_profile'])): //!$_GET['auto_reg_form']
-            if(!in_array($_GET['table'], $tables)) {
+        case (!isset($_REQUEST['action'])&&$db_exists&&$users_set&&$user_loged_in&&$user_role>1&&empty($article)&&!isset($_REQUEST['logout'])&&!isset($_REQUEST['user_profile'])): //!$_REQUEST['auto_reg_form']
+            if(!in_array($_REQUEST['table'], $tables)) {
                 header("Location: cosmodb.php?table=$table");
             }
             change_table();
             view_table($table);
             break;
         
-        case (!isset($_GET['action'])&&$db_exists&&$users_set&&$user_loged_in&&$user_role==1&&empty($article)&&!isset($_GET['logout'])&&!isset($_GET['user_profile'])): //!$_GET['auto_reg_form']
+        case (!isset($_REQUEST['action'])&&$db_exists&&$users_set&&$user_loged_in&&$user_role==1&&empty($article)&&!isset($_REQUEST['logout'])&&!isset($_REQUEST['user_profile'])): //!$_REQUEST['auto_reg_form']
             change_table();
             view_cards();
             break;
 
         case ($db_exists&&!$user_loged_in&&$user_role==0):
-            if(isset($_GET['auto_reg_form'])) {
-                $auto_reg_form = $_GET['auto_reg_form'];
+            if(isset($_REQUEST['auto_reg_form'])) {
+                $auto_reg_form = $_REQUEST['auto_reg_form'];
             } else {
                 $auto_reg_form = "Авторизоваться";
             }
@@ -70,25 +71,25 @@ function main () {
             additional_set_up($auto_reg_form);
             break;
 
-        case ($user_loged_in&&$db_exists&&$users_set&&$user_role>0&&!empty($article)&&!isset($_GET['logout'])&&!isset($_GET['user_profile'])):
+        case ($user_loged_in&&$db_exists&&$users_set&&$user_role>0&&!empty($article)&&!isset($_REQUEST['logout'])&&!isset($_REQUEST['user_profile'])):
             change_table();
             article($article);
             break;
 
-        case (!isset($_GET['action'])&&isset($_GET['user_profile'])&&$db_exists&&$users_set&&$user_loged_in&&$user_role>0&&empty($article)&&!isset($_GET['logout'])):
+        case (!isset($_REQUEST['action'])&&isset($_REQUEST['user_profile'])&&$db_exists&&$users_set&&$user_loged_in&&$user_role>0&&empty($article)&&!isset($_REQUEST['logout'])):
             change_table();
             user_profile();
             break;
 
-        case (isset($_GET['logout'])):
-            session_unset(); // Unset all session variables
-            session_destroy(); // Destroy the session
+        case (isset($_REQUEST['logout'])):
+            session_unset();
+            session_destroy();
             session_start();
             header ("Location: cosmodb.php?auto_reg_form=Авторизоваться");
             break;
 
         case (!$db_exists):
-            header ("Location: ../init/db_connect.php");
+            create_cosmodb();
             database_eror();
             break;
     }

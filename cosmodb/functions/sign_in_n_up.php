@@ -5,7 +5,7 @@ function additional_set_up ($auto_reg_form) {
         case "Регистрация":
             ?>
             <main class="container mt-5 border border-primary rounded-4 p-3">
-            <form action="../main/cosmodb.php" method="get">
+            <form action="../main/cosmodb.php?auto_reg_form=Регистрация" method = "post">
                 <?php if(!$user_admin_exists) { 
                     $value = [
                         "nick_name" => "value = \"admin\"",
@@ -33,7 +33,7 @@ function additional_set_up ($auto_reg_form) {
                         id="nick_name"
                         placeholder="Имя пользователя"
                         <?= !$user_admin_exists ? $value['nick_name'] : "" ?>
-                        <?= isset($_GET['nick_name']) ? "value = \"".$_GET['nick_name']."\"" : "" ?>
+                        <?= isset($_REQUEST['nick_name']) ? "value = \"".$_REQUEST['nick_name']."\"" : "" ?>
                     />
                 <label for="email" class="form-label h4">Эл почта</label>
                     <input
@@ -43,7 +43,7 @@ function additional_set_up ($auto_reg_form) {
                         id="email"
                         placeholder="Эл почта"
                         <?= !$user_admin_exists ? $value['email'] : "" ?>
-                        <?= isset($_GET['email']) ? "value = \"".$_GET['email']."\"" : "" ?>
+                        <?= isset($_REQUEST['email']) ? "value = \"".$_REQUEST['email']."\"" : "" ?>
                         aria-describedby="emailHelp"
                     />            
                 <label for="password" class="form-label h4">Пароль</label>
@@ -66,11 +66,11 @@ function additional_set_up ($auto_reg_form) {
 
 
                 <?php
-            if(isset($_GET['set_up'])&&!empty($_GET['nick_name'])&&!empty($_GET['email'])
-            &&!empty($_GET['password'])&&!empty($_GET['password_repeat'])) {
-                if($_GET['password']==$_GET['password_repeat']) {
-                    $nick_name_set_up = $_GET['nick_name'];
-                    $email_set_up = $_GET['email'];
+            if(isset($_REQUEST['set_up'])&&!empty($_REQUEST['nick_name'])&&!empty($_REQUEST['email'])
+            &&!empty($_REQUEST['password'])&&!empty($_REQUEST['password_repeat'])) {
+                if($_REQUEST['password']==$_REQUEST['password_repeat']) {
+                    $nick_name_set_up = $_REQUEST['nick_name'];
+                    $email_set_up = $_REQUEST['email'];
                     try {
                         $stmt1 = $conn -> query("SELECT * FROM `users` WHERE `email` = '$email_set_up'");
                         $stmt1 = $stmt1 -> fetch();
@@ -80,7 +80,7 @@ function additional_set_up ($auto_reg_form) {
                             <p class="h5 text-danger mt-3">Пользователь с такой почтой или логином уже существует</p>
                             <?php
                         } else {
-                        $password_set_up = password_hash($_GET['password'], PASSWORD_DEFAULT);
+                        $password_set_up = password_hash($_REQUEST['password'], PASSWORD_DEFAULT);
                         $conn -> exec("INSERT INTO `users` (`id`, `nick_name`, `role`, `role_raise`, `email`, `password`) VALUES ('','$nick_name_set_up', (SELECT `id` FROM `roles` WHERE `id`='$role_set_up'),(SELECT `id` FROM `roles` WHERE `id`='$role_raise_set_up'),'$email_set_up','$password_set_up')");
                         header("Location: ../main/cosmodb.php?auto_reg_form=Авторизоваться");
                         }
@@ -91,7 +91,7 @@ function additional_set_up ($auto_reg_form) {
                     <p class="h5 text-danger mt-3">Пароли не совпадают</p>
                     <?php
                 }
-                } elseif (isset($_GET['set_up'])) {?>
+                } elseif (isset($_REQUEST['set_up'])) {?>
                     <p class="h5 text-danger mt-3">Заполните все поля</p>
                     <?php
                 }
@@ -118,7 +118,7 @@ function additional_set_up ($auto_reg_form) {
         case "Авторизоваться":
             ?>
             <main class="container mt-5 border border-primary rounded-4 p-3">
-            <form action="../main/cosmodb.php" method="get">
+            <form action="../main/cosmodb.php?auto_reg_form=Авторизоваться" method = "post">
                 <legend class="h1 text-center text-primary">Вход в систему</legend>
                 <fieldset>
                 <label for="name_mail" class="form-label h4">Имя пользователя или эл почта</label>
@@ -139,9 +139,9 @@ function additional_set_up ($auto_reg_form) {
                 <input type="hidden" name="auto_reg_form" value="Авторизоваться" />
                 <div class="row">
         <?php
-            if(isset($_GET['set_up'])&&!empty($_GET['name_mail'])&&!empty($_GET['password'])) {
-                $name_mail = $_GET['name_mail'];
-                $password = $_GET['password'];
+            if(isset($_REQUEST['set_up'])&&!empty($_REQUEST['name_mail'])&&!empty($_REQUEST['password'])) {
+                $name_mail = $_REQUEST['name_mail'];
+                $password = $_REQUEST['password'];
                 $sql_search_user = "SELECT `nick_name`, `role`, `email`, `password` FROM `users` WHERE (`nick_name`='$name_mail' OR `email`='$name_mail')";
                 $result_search_user = $conn->query($sql_search_user);
                 if($result_search_user->rowCount() > 0) {
@@ -160,7 +160,7 @@ function additional_set_up ($auto_reg_form) {
                         <p class="h5 text-danger mt-3">Неправильный пароль</p>
                 <?php
                 }
-            } elseif (isset($_GET['enter'])) { ?>
+            } elseif (isset($_REQUEST['enter'])) { ?>
             <p class="h5 text-danger mt-3">Заполните все поля</p>
             <?php
                 } ?>

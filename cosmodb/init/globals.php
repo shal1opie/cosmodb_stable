@@ -1,12 +1,12 @@
 <?php
-if(isset($_GET['id_change_form'])) {
-    $id_change_form = $_GET['id_change_form'];
+if(isset($_REQUEST['id_change_form'])) {
+    $id_change_form = $_REQUEST['id_change_form'];
 } else {
     $id_change_form = "";
 }
 
-if(isset($_GET['article'])) {
-    $article = htmlspecialchars($_GET['article']);
+if(isset($_REQUEST['article'])) {
+    $article = htmlspecialchars($_REQUEST['article']);
 } else {
     $article = null;
 }
@@ -61,8 +61,8 @@ switch ($user_role) {
         break;
 }
 
-if(isset($_GET['table'])&&in_array($_GET['table'], $tables)) {
-    $table = htmlspecialchars($_GET['table']);
+if(isset($_REQUEST['table'])&&in_array($_REQUEST['table'], $tables)) {
+    $table = htmlspecialchars($_REQUEST['table']);
 } elseif ($user_role == 2) {
     $table = 'users';
 } else {
@@ -76,8 +76,8 @@ switch ($table) {
     case 'app_types':
         $select_query = "SELECT `id` AS `#`, `type` AS `Тип`".$select_query.$order_by;
 
-        if(isset($_GET['type'])&&!is_array($_GET['type'])) {
-            $type = $_GET['type'];
+        if(isset($_REQUEST['type'])&&!is_array($_REQUEST['type'])) {
+            $type = $_REQUEST['type'];
             $insert_query = $insert_query."(`id`, `type`) VALUES ('$id_change_form', '$type')";
         } else {
         $type = "";
@@ -89,11 +89,11 @@ switch ($table) {
         $select_query = "SELECT `id` AS `#`, `initials` AS `Инициалы`, 
         CONCAT(`surename`,' ',`name`,' ',`last_name`) AS `ФИО`".$select_query.$order_by;
         
-        if(isset($_GET['initials'])&&isset($_GET['surename'])&&isset($_GET['name'])&&isset($_GET['last_name'])&&!is_array($_GET['initials'])&&!is_array($_GET['surename'])&&!is_array($_GET['name'])&&!is_array($_GET['last_name'])) {
-            $initials = $_GET['initials'];
-            $surename = $_GET['surename'];
-            $name = $_GET['name'];
-            $last_name = $_GET['last_name'];
+        if(isset($_REQUEST['initials'])&&isset($_REQUEST['surename'])&&isset($_REQUEST['name'])&&isset($_REQUEST['last_name'])&&!is_array($_REQUEST['initials'])&&!is_array($_REQUEST['surename'])&&!is_array($_REQUEST['name'])&&!is_array($_REQUEST['last_name'])) {
+            $initials = $_REQUEST['initials'];
+            $surename = $_REQUEST['surename'];
+            $name = $_REQUEST['name'];
+            $last_name = $_REQUEST['last_name'];
             $insert_query = $insert_query."(`id`,`initials`,`surename`,`name`,`last_name`) 
             VALUES ('$id_change_form', '$initials', '$surename', '$name', '$last_name')";
         } else {
@@ -105,8 +105,8 @@ switch ($table) {
     case 'roles':
         $select_query = "SELECT `id` AS `#`, `role_name` AS `Роль`".$select_query.$order_by;
 
-        if(isset($_GET['role_name'])&&!is_array($_GET['role_name'])) {
-            $role_name = $_GET['role_name'];
+        if(isset($_REQUEST['role_name'])&&!is_array($_REQUEST['role_name'])) {
+            $role_name = $_REQUEST['role_name'];
             $insert_query = $insert_query."(`id`,`role_name`) VALUES ('$id_change_form','$role_name')";
         } else {
         $role_name = "";
@@ -121,13 +121,13 @@ switch ($table) {
         INNER JOIN people ON space_achiv.people = people.id
         INNER JOIN app_types ON space_achiv.type_app = app_types.id".$order_by;
 
-        if(isset($_GET['country'])&&isset($_GET['people'])&&isset($_GET['achiv_name'])&&isset($_GET['date'])&&isset($_GET['text'])&&isset($_GET['type_app'])&&!is_array($_GET['country'])&&!is_array($_GET['people'])&&!is_array($_GET['achiv_name'])&&!is_array($_GET['date'])&&!is_array($_GET['text'])&&!is_array($_GET['type_app'])) {
-            $country = $_GET['country'];
-            $people = $_GET['people'];
-            $achiv_name = $_GET['achiv_name'];
-            $date = $_GET['date'];
-            $text = $_GET['text'];
-            $type_app = $_GET['type_app'];
+        if(isset($_REQUEST['country'])&&isset($_REQUEST['people'])&&isset($_REQUEST['achiv_name'])&&isset($_REQUEST['date'])&&isset($_REQUEST['text'])&&isset($_REQUEST['type_app'])&&!is_array($_REQUEST['country'])&&!is_array($_REQUEST['people'])&&!is_array($_REQUEST['achiv_name'])&&!is_array($_REQUEST['date'])&&!is_array($_REQUEST['text'])&&!is_array($_REQUEST['type_app'])) {
+            $country = $_REQUEST['country'];
+            $people = $_REQUEST['people'];
+            $achiv_name = $_REQUEST['achiv_name'];
+            $date = $_REQUEST['date'];
+            $text = $_REQUEST['text'];
+            $type_app = $_REQUEST['type_app'];
             $insert_query = $insert_query."(`id`, `country`, `people`, `achiv_name`, `date`, `text`, `type_app`) 
         VALUES ('$id_change_form','$country',(SELECT `id` FROM `people` WHERE `id`='$people'),'$achiv_name','$date','$text',(SELECT `id` FROM `app_types` WHERE `id`='$type_app'))";
         } else {
@@ -144,15 +144,14 @@ switch ($table) {
         INNER JOIN roles ON users.role = roles.id
         LEFT JOIN roles r1 ON users.role_raise = r1.id".$order_by;
 
-        if(isset($_GET['nick_name'])&&isset($_GET['role'])&&isset($_GET['role_raise'])&&isset($_GET['email'])&&isset($_GET['password'])&&!is_array($_GET['nick_name'])&&!is_array($_GET['role'])&&!is_array($_GET['role_raise'])&&!is_array($_GET['email'])&&!is_array($_GET['password'])) {
-            $nick_name = $_GET['nick_name'];
-            $role = $_GET['role'];
-            $role_raise = $_GET['role_raise'];
-            $email = $_GET['email'];
-            $password = password_hash($_GET['password'], PASSWORD_DEFAULT);
+        if(isset($_REQUEST['nick_name'])&&isset($_REQUEST['role'])&&isset($_REQUEST['email'])&&isset($_REQUEST['password'])&&!is_array($_REQUEST['nick_name'])&&!is_array($_REQUEST['role'])&&!is_array($_REQUEST['email'])&&!is_array($_REQUEST['password'])) {
+            $nick_name = $_REQUEST['nick_name'];
+            $role = $_REQUEST['role'];
+            $email = $_REQUEST['email'];
+            $password = password_hash($_REQUEST['password'], PASSWORD_DEFAULT);
             $insert_query = $insert_query."(`id`, `nick_name`, `role`, `role_raise`, `email`, `password`) 
             VALUES ('$id_change_form','$nick_name', (SELECT `id` FROM `roles` WHERE `id`='$role'),
-            (SELECT `id` FROM `roles` WHERE `id`='$role_raise'),'$email','$password')";
+            (SELECT `id` FROM `roles` WHERE `id`='$role'),'$email','$password')";
         } else {
             $nick_name = $role = $role_raise = $email = $password = "";
         }
@@ -186,4 +185,5 @@ while ($row = $result->fetch()) {
 }
 } catch(PDOException $e) {
     echo database_eror();
-} ?>
+}
+?>
