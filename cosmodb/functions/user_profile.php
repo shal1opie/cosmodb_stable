@@ -13,7 +13,7 @@ function user_profile () {
         "space_achiv" => "Космические достижения",
         "app_types" => "Типы аппаратов",
         "roles" => "Роли",
-        "people" => "Люди",
+        "people" => "Знаковые личности",
     ]
     ?>
 
@@ -100,6 +100,7 @@ function user_profile () {
                         $logs = [];
                         $dir = '../init/logs.json';
                         $files = json_decode(file_get_contents($dir), true);
+                        $files = array_reverse($files);
                         foreach ($files as $key_files => $value) {
                             foreach ($value as $key => $value) {
                                 switch ($key) {

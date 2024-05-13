@@ -3,5 +3,5 @@
 	"username": "root",
 	"password": "",
 	"dbname": "cosmodb",
-	"db_dump": "../back_up/cosmodb.sql"
+	"db_backup": "../back_up/cosmodb.sql"
 }
