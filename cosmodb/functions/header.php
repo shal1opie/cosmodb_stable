@@ -25,12 +25,33 @@ function change_table () {
                         <a href="cosmodb.php?user_profile=<?= $user_name?><?= $user_role == 4 ? "&back_up=1" : ""?>"
                         role="button" 
                         class="btn btn-outline-light px-1 py-1 d-inline-flex align-items-center justify-content-center border-dark border-2 rounded-circle"><?= $settings_svg ?></a>
-                        <a href="cosmodb.php?logout=1"
-                        role="button" 
-                        class="btn btn-danger px-1 py-1 d-inline-flex align-items-center justify-content-center border-2 rounded-circle"><?= $logout_svg ?></a>
+                        <button
+                        class="btn btn-danger px-1 py-1 
+                        d-inline-flex align-items-center justify-content-center 
+                        border-3 rounded-circle"
+                        data-bs-toggle = "modal" 
+                        data-bs-target = "#logout_modal"><?= $logout_svg ?></button>
                     </strong>
                 </div>
             </header>
+<div class="modal fade" id="logout_modal" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="logout_modal_Label" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered mt-0 mb-5">
+    <div class="modal-content border border-primary rounded-4 shadow">
+      <!-- <div class="modal-header d-flex justify-content-center border-0">
+        <p class="modal-title fs-5 h1" id="logout_modal_Label">Выход из профиля</p>
+      </div> -->
+      <div class="modal-body px-0 pt-3 pb-1">
+        <p class="h3 text-center">Вы уверены, что хотите выйти?</p>
+      </div>
+      <div class="modal-footer d-flex justify-content-center border-0 px-0 pb-3 pt-1">
+        <button type="button" class="btn btn-primary" data-bs-dismiss="modal">Отмена</button>
+        <a href="cosmodb.php?logout=1"
+        role="button" 
+        class="btn btn-danger">Выйти</a>
+      </div>
+    </div>
+  </div>
+</div>
     <?php
         break;
         case (!isset($_REQUEST['action'])&&!$user_loged_in&&$user_role==0&&!isset($_REQUEST['user_profile'])&&!isset($_REQUEST['article'])):
