@@ -456,112 +456,111 @@ function forms ($action) {
                         }
                     }
                     $row = $conn->query($select_where)->fetch();
-                    foreach($row as $key => $value) {
-                        if ($key!=0) {
-                        switch ($key) {
-                            case (is_string($key)&&$key!='Текст'&&!isset($word_value[$key])&&$key!='#'&&!is_numeric($value)&&$key!=0&&$key!='Дата'):
-                                ?>
-                                <div class="row mb-3 px-3">
-                                <label class="form-label" for="<?=$input_names[$key]?>"><?=$key?></label>
-                                <input 
-                                type="text" 
-                                class="form-control"
-                                id="<?=$input_names[$key]?>"
-                                name="<?=$input_names[$key]?>" 
-                                value="<?=$value?>"/>
-                                </div>
-                                <?php
-                                break;
-                            case (is_string($key)&&is_numeric($value)&&!isset($word_value[$key])):
-                                ?>
-                                <div class="row mb-3 px-3">
-                                <label class="form-label" for="id_change_form[]"><?=$key?></label>
-                                <input type="text" 
-                                class="form-control"
-                                id="id_change_form[]"
-                                name="id_change_form[]" 
-                                value="<?=$value?>" 
-                                readonly/>
-                                </div>
-                                <?php
-                                break;
-                            case (is_string($key)&&$key=='Текст'&&!isset($word_value[$key])):
-                                ?>
-                                <div class="row mb-3 px-3">
-                                <label class="form-label" for="<?=$input_names[$key]?>"><?=$key?></label>
-                                <textarea
-                                class="form-control"
-                                id="<?=$input_names[$key]?>"
-                                name="<?=$input_names[$key]?>"
-                                rows="10">
-                                <?=trim($value)?>
-                                </textarea>
-                                </div>
-                                <?php
-                                break;
-                            case (is_string($key)&&$key=='Дата'&&!isset($word_value[$key])):
-                                ?>
-                                <div class="row mb-3 px-3">
-                                <label class="form-label" for="<?=$input_names[$key]?>"><?=$key?></label>
-                                <input type="date"
-                                class="form-control"
-                                id="<?=$input_names[$key]?>"
-                                name="<?=$input_names[$key]?>"
-                                value="<?=$value?>"/>
-                                </div>
-                                <?php
-                                break;
-                            case (is_string($key)&&isset($word_value[$key])):
-                                ?>
-                                <div class="row mb-3 px-3">
-                                <label class="form-label" for="<?=$input_names[$key]?>"><?=$key?></label>
-                                <select name="<?=$input_names[$key]?>" class="form-select">
-                                <?php
-                                if ($key!='Страна') {?>
-                                <option value="0"><?=$value?></option><?php
-                                }
-                                switch ($word_value[$key]) {
-                                    case "roles":
-                                        $sql = "SELECT * FROM roles";
-                                        $result = $conn->query($sql);
-                                        while ($row = $result->fetch()) {
-                                            if ($row['role_name']!=$value) {?>
-                                                <option value="<?=$row['id']?>"><?=$row['role_name']?></option><?php
-                                            }
-                                        }
-                                        break;
-                                    case "country":
-                                        if($value==1) {?>
-                                            <option value="0">СССР</option><option value="2">Россия</option><?php
-                                        } else {?>
-                                            <option value="0">Россия</option><option value="1">СССР</option><?php
-                                        }
-                                        break;
-                                    case "people":
-                                        $sql = "SELECT * FROM people";
-                                        $result = $conn->query($sql);
-                                        while ($row = $result->fetch()) {
-                                            if ($row['initials']!=$value) {?>
-                                                <option value="<?=$row['id']?>"><?=$row['initials']?></option><?php
-                                            }
-                                        }
-                                        break;
-                                    case "app_types":
-                                        $sql = "SELECT * FROM app_types";
-                                        $result = $conn->query($sql);
-                                        while ($row = $result->fetch()) {
-                                            if ($row['type']!=$value) {?>
-                                                <option value="<?=$row['id']?>"><?=$row['type']?></option><?php
-                                            }
-                                        }
-                                        break;
-                                }?>
-                                </select>
-                            </label>
+                    unset($row[0]);
+                foreach($row as $key => $value) {
+                    switch ($key) {
+                        case (is_string($key)&&$key!='Текст'&&!isset($word_value[$key])&&$key!='#'&&!is_numeric($value)&&$key!=0&&$key!='Дата'):
+                            ?>
+                            <div class="row mb-3 px-3">
+                            <label class="form-label" for="<?=$input_names[$key]?>"><?=$key?></label>
+                            <input 
+                            type="text" 
+                            class="form-control"
+                            id="<?=$input_names[$key]?>"
+                            name="<?=$input_names[$key]?>" 
+                            value="<?=$value?>"/>
                             </div>
-                                <?php
-                                break;
+                            <?php
+                            break;
+                        case (is_string($key)&&is_numeric($value)&&!isset($word_value[$key])):
+                            ?>
+                            <div class="row mb-3 px-3">
+                            <label class="form-label" for="id_change_form[]"><?=$key?></label>
+                            <input type="text" 
+                            class="form-control"
+                            id="id_change_form[]"
+                            name="id_change_form[]" 
+                            value="<?=$value?>" 
+                            readonly/>
+                            </div>
+                            <?php
+                            break;
+                        case (is_string($key)&&$key=='Текст'&&!isset($word_value[$key])):
+                            ?>
+                            <div class="row mb-3 px-3">
+                            <label class="form-label" for="<?=$input_names[$key]?>"><?=$key?></label>
+                            <textarea
+                            class="form-control"
+                            id="<?=$input_names[$key]?>"
+                            name="<?=$input_names[$key]?>"
+                            rows="10">
+                            <?=trim($value)?>
+                            </textarea>
+                            </div>
+                            <?php
+                            break;
+                        case (is_string($key)&&$key=='Дата'&&!isset($word_value[$key])):
+                            ?>
+                            <div class="row mb-3 px-3">
+                            <label class="form-label" for="<?=$input_names[$key]?>"><?=$key?></label>
+                            <input type="date"
+                            class="form-control"
+                            id="<?=$input_names[$key]?>"
+                            name="<?=$input_names[$key]?>"
+                            value="<?=$value?>"/>
+                            </div>
+                            <?php
+                            break;
+                        case (is_string($key)&&isset($word_value[$key])):
+                            ?>
+                            <div class="row mb-3 px-3">
+                            <label class="form-label" for="<?=$input_names[$key]?>"><?=$key?></label>
+                            <select name="<?=$input_names[$key]?>" class="form-select">
+                            <?php
+                            if ($key!='Страна') {?>
+                            <option value="0"><?=$value?></option><?php
                             }
+                            switch ($word_value[$key]) {
+                                case "roles":
+                                    $sql = "SELECT * FROM roles";
+                                    $result = $conn->query($sql);
+                                    while ($row = $result->fetch()) {
+                                        if ($row['role_name']!=$value) {?>
+                                            <option value="<?=$row['id']?>"><?=$row['role_name']?></option><?php
+                                        }
+                                    }
+                                    break;
+                                case "country":
+                                    if($value==1) {?>
+                                        <option value="0">СССР</option><option value="2">Россия</option><?php
+                                    } else {?>
+                                        <option value="0">Россия</option><option value="1">СССР</option><?php
+                                    }
+                                    break;
+                                case "people":
+                                    $sql = "SELECT * FROM people";
+                                    $result = $conn->query($sql);
+                                    while ($row = $result->fetch()) {
+                                        if ($row['initials']!=$value) {?>
+                                            <option value="<?=$row['id']?>"><?=$row['initials']?></option><?php
+                                        }
+                                    }
+                                    break;
+                                case "app_types":
+                                    $sql = "SELECT * FROM app_types";
+                                    $result = $conn->query($sql);
+                                    while ($row = $result->fetch()) {
+                                        if ($row['type']!=$value) {?>
+                                            <option value="<?=$row['id']?>"><?=$row['type']?></option><?php
+                                        }
+                                    }
+                                    break;
+                            }?>
+                            </select>
+                        </label>
+                        </div>
+                            <?php
+                            break;
                         }
                     }
                 }
