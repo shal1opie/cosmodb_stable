@@ -38,7 +38,7 @@ function reset_session () {
 
 
 function main () {
-    global $table, $db_exists, $users_set, $user_loged_in, $user_role, $article, $user_admin_exists, $tables;
+    global $table, $db_exists, $users_set, $user_loged_in, $user_role, $article, $user_admin_exists, $tables, $column_to_search;
     // var_dump($_SESSION);
     // echo "<br>".$_SESSION['role']."<br>";
     switch (true) {
@@ -50,7 +50,7 @@ function main () {
 
         case (!isset($_REQUEST['action'])&&$db_exists&&$users_set&&$user_loged_in&&$user_role>1&&empty($article)&&!isset($_REQUEST['logout'])&&!isset($_REQUEST['user_profile'])): //!$_REQUEST['auto_reg_form']
             if(!in_array($_REQUEST['table'], $tables)) {
-                header("Location: cosmodb.php?table=$table");
+                header("Location: cosmodb.php?table=$table&column_name=id");
             }
             change_table();
             view_table($table);
@@ -91,6 +91,9 @@ function main () {
         case (!$db_exists):
             create_cosmodb();
             database_eror();
+            break;
+        case (!isset($_REQUEST['action'])&&isset($_REQUEST['search'])&&$db_exists&&$users_set&&$user_loged_in&&$user_role>0&&empty($article)&&!isset($_REQUEST['logout'])&&!isset($_REQUEST['user_profile'])):
+            var_dump($_REQUEST);
             break;
     }
 }

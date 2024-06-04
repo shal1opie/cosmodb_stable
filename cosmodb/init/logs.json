@@ -123,5 +123,77 @@
         "action": "Отклонить роль",
         "id": "2",
         "time": "19.05.2024 21:00:01"
+    },
+    {
+        "user": "admin",
+        "role": 4,
+        "table": "space_achiv",
+        "action": "Редактировать выбранное",
+        "id": "3",
+        "time": "03.06.2024 18:43:45"
+    },
+    {
+        "user": "admin",
+        "role": 4,
+        "table": "users",
+        "action": "Редактировать выбранное",
+        "id": "2",
+        "time": "03.06.2024 18:44:20"
+    },
+    {
+        "user": "admin",
+        "role": 4,
+        "table": "users",
+        "action": "Отклонить роль",
+        "id": "2",
+        "time": "03.06.2024 18:44:23"
+    },
+    {
+        "user": "admin",
+        "role": 4,
+        "table": "space_achiv",
+        "action": "Редактировать выбранное",
+        "id": "3",
+        "time": "03.06.2024 21:15:43"
+    },
+    {
+        "user": "admin",
+        "role": 4,
+        "table": "space_achiv",
+        "action": "Редактировать выбранное",
+        "id": "3",
+        "time": "03.06.2024 21:15:51"
+    },
+    {
+        "user": "admin",
+        "role": 4,
+        "table": "space_achiv",
+        "action": "Редактировать выбранное",
+        "id": "3",
+        "time": "03.06.2024 21:16:04"
+    },
+    {
+        "user": "admin",
+        "role": 4,
+        "table": "users",
+        "action": "Отклонить роль",
+        "id": "20",
+        "time": "04.06.2024 00:22:27"
+    },
+    {
+        "user": "admin",
+        "role": 4,
+        "table": "space_achiv",
+        "action": "Редактировать выбранное",
+        "id": "1",
+        "time": "04.06.2024 00:28:55"
+    },
+    {
+        "user": "admin",
+        "role": 4,
+        "table": "space_achiv",
+        "action": "Редактировать выбранное",
+        "id": "1",
+        "time": "04.06.2024 02:47:30"
     }
 ]

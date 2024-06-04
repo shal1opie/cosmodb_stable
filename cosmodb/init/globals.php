@@ -186,4 +186,10 @@ while ($row = $result->fetch()) {
 } catch(PDOException $e) {
     echo database_eror();
 }
+
+if(isset($_REQUEST['column_name'])) {
+    $column_to_search = $_REQUEST['column_name'];
+} else {
+    $column_to_search = "id";
+}
 ?>

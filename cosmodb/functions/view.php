@@ -1,6 +1,44 @@
 <?php
+
+function user_search () {
+    global $table, $select_query, $column_to_search, $order_by;
+    $search_query = str_replace($order_by, '', $select_query);
+    $search_term = "";
+    switch ($column_to_search) {
+        case "text":
+            $search_query .= " WHERE MATCH(`text`) AGAINST ('*".$_REQUEST['search']."*' IN NATURAL LANGUAGE MODE)";
+            break;
+        case "people":
+            $related_column = "people.initials";
+            $search_query .= " WHERE ".$related_column." LIKE '%".$_REQUEST['search']."%'";
+            break;
+        case "type_app":
+            $related_column = "app_types.type";
+            $search_query .= " WHERE ".$related_column." LIKE '%".$_REQUEST['search']."%'";
+            break;
+        case "country":
+            $search_term = mb_strtoupper($_REQUEST['search'], 'UTF-8');
+            if ($search_term == "РОССИЯ") {
+                $search_term = "2";
+            } elseif ($search_term == "СССР") {
+                $search_term = "1";
+            }
+            $search_query .= " WHERE ".$table.".".$column_to_search." LIKE '%".$search_term."%'";
+            break;
+        case "role":
+        case "role_raise":
+            $related_column = "roles.role_name";
+            $search_query .= " WHERE ".$related_column." LIKE '%".$_REQUEST['search']."%'";
+            break;
+        default:
+            $search_query .= " WHERE ".$table.".".$column_to_search." LIKE '%".$_REQUEST['search']."%'";
+            break;
+    }
+    return $search_query.$order_by;
+}
+
 function view_table ($table) {
-    global $conn, $select_query, $user_role;
+    global $conn, $select_query, $user_role, $column_to_search, $order_by;
     $delete_ids = [];
     $table_names = [
         "app_types" => "Тип аппарата",
@@ -27,11 +65,11 @@ function view_table ($table) {
     foreach($table_names as $key => $value) {
         switch ($key) {
             case $table:
-                echo "<a href=\"cosmodb.php?table=".$key."\" role=\"button\" class=\"btn rounded-0 rounded-top-4 btn-primary\">".$value."</a>";
+                echo "<a href=\"cosmodb.php?table=".$key."&column_name=id\" role=\"button\" class=\"btn rounded-0 rounded-top-4 btn-primary\">".$value."</a>";
                 $current_table_name = $value;
                 break;
             default:
-                echo "<a href=\"cosmodb.php?table=".$key."\" role=\"button\" class=\"btn rounded-0 rounded-top-4 btn-light\">".$value."</a>";
+                echo "<a href=\"cosmodb.php?table=".$key."&column_name=id\" role=\"button\" class=\"btn rounded-0 rounded-top-4 btn-light\">".$value."</a>";
                 break;
         }
     }
@@ -61,8 +99,15 @@ function view_table ($table) {
     if ($table == 'space_achiv') {
         $select_query = str_replace('`text` AS `Текст`, ', '', $select_query);
     }
+    if(isset($_REQUEST['search'])) {
+        $search_query = user_search();
+        $final_query = $search_query;
+    } else {
+        $final_query = $select_query;
+    }
+    // var_dump($final_query);
 try {
-    $result = $conn -> query($select_query);
+    $result = $conn -> query($final_query);
     ?>
     <div class="row mx-4">
     <?php
@@ -71,6 +116,9 @@ try {
     <div class="table-responsive border border-primary rounded-4 px-0" data-simplebar>
         <table class="table table-hover table-striped mb-0">
     <?php
+    if ($result->rowCount() == 0) {
+        echo "<th class=\"text-center\">По вашему запросу ничего не найдено</th>";
+    }
     $once = 0;
     while ($row = $result -> fetch()) {
         if($once < 1) {echo "<thead><tr>";}
@@ -313,36 +361,41 @@ try {
 
 
 function view_cards () {
-    global $conn;
+    global $conn, $column_to_search;
     ?>
     <main class="container-fluid mb-5">
-        <div class="row mt-5 row-cols-1 row-cols-md-2 row-cols-lg-4 g-4 mx-4">
+        <div class="row mt-3 row-cols-1 row-cols-md-2 row-cols-lg-4 g-4 mx-4">
     <?php
-    $sql = "SELECT `id`, `achiv_name`, `text` FROM space_achiv";
+    if(isset($_REQUEST['search'])) {
+        $sql = user_search();
+    } else {
+        $sql = "SELECT `id` AS `#`, `achiv_name` AS `Наименование`, `text` FROM space_achiv";
+    }
     try {
         $result = $conn -> query($sql);
         while ($row = $result -> fetch()) {
             ?>
             <div class="col d-flex justify-content-center">
             <?php
-            $card_text = explode(" ",$row['text'], 9);
-            unset($card_text[8]);
-            $card_text = implode(" ",$card_text)."...";
+            // $card_text = explode(" ",$row['text'], 9);
+            // unset($card_text[8]);
+            // $card_text = implode(" ",$card_text)."...";
             ?>
-                <div class="card w-100" style="height: 18rem;">
-                    <img src="../image/placeholder.jpg" 
-                    class="card-img-top 
-                    overflow-hidden 
-                    object-fit-cover
-                    h-75 
-                    w-100" 
-                    alt="...">
-                    <div class="card-body d-flex flex-column h-100">
-                        <p class="card-title fs-5"><?=$row['achiv_name']?></p>
-                        <!-- <p class="card-text"><?=$card_text?></p> -->
-                        <a href="cosmodb.php?article=<?=$row['id']?>" class="btn btn-primary stretched-link mt-auto">Прочесть статью</a>
+
+                    <div class="card w-100" style="height: 18rem;">
+                        <img src="../image/placeholder.jpg" 
+                        class="card-img-top 
+                        overflow-hidden 
+                        object-fit-cover
+                        h-75 
+                        w-100" 
+                        alt="...">
+                        <div class="card-body d-flex flex-column h-100 mt-auto">
+                            <p class="card-title fs-5"><?=$row['Наименование']?></p>
+                            <a href="cosmodb.php?article=<?=$row['#']?>" class="btn btn-primary stretched-link mt-auto">Прочесть статью</a>
+                        </div>
                     </div>
-                </div>
+
             </div>
             <?php
         }

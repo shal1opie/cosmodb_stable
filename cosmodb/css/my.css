@@ -1,3 +1,9 @@
+:root {
+	--dropdown-size-sm: 15vw;
+	--dropdown-size-md: 10vw;
+	--dropdown-size-lg: 8vw;
+}
+
 #profile_pic {
 	width: 200px;
 	height: 200px;
@@ -5,4 +11,30 @@
 
 .article-indent {
 	text-indent: 1.5em;
+}
+
+.no-caret::after {
+	content: none;
+}
+
+
+        
+.dropdown-responsive {
+	width: var(--dropdown-size-sm);
+}
+
+@media (min-width: 1281px) and (max-width: 1920px) {
+	.dropdown-responsive {
+		width: var(--dropdown-size-md);
+	}
+}
+
+@media (min-width: 1921px) {
+	.dropdown-responsive {
+		width: var(--dropdown-size-lg);
+	}
+}
+
+.unset-all {
+	all: unset;
 }

@@ -1,6 +1,6 @@
 <?php
 function edit () {
-    global $conn, $table, $id_change_form, $insert_query, $action, $user_role, $user_name;
+    global $conn, $table, $id_change_form, $insert_query, $action, $user_role, $user_name, $column_to_search;
     $log_data = [
         'user' => $user_name,
         'role' => $user_role,
@@ -182,7 +182,7 @@ function edit () {
                     }
                     $log_data = json_encode($log_data_end, JSON_UNESCAPED_UNICODE |JSON_PRETTY_PRINT);       
                     file_put_contents($json_log_dir, $log_data);
-                    header("Location: ../main/cosmodb.php?table=users");
+                    header("Location: ../main/cosmodb.php?table=users&change_column=$column_to_search");
                 } else {
                     echo "<small class=\"pico-color-red-500\">Такой пользователь уже существует!</small>";
                 }
@@ -229,7 +229,7 @@ function edit () {
                 }
                 $log_data = json_encode($log_data_end, JSON_UNESCAPED_UNICODE |JSON_PRETTY_PRINT);       
                 file_put_contents($json_log_dir, $log_data);
-                header("Location: cosmodb.php?table=app_types");
+                header("Location: cosmodb.php?table=app_types&change_column=$column_to_search");
             } elseif (isset($_REQUEST['add_row'])) {?>
                     <p class="h5 text-danger mt-3">Заполните все поля</p>
             <?php
@@ -272,7 +272,7 @@ function edit () {
                 }
                 $log_data = json_encode($log_data_end, JSON_UNESCAPED_UNICODE |JSON_PRETTY_PRINT);       
                 file_put_contents($json_log_dir, $log_data);
-                header("Location: cosmodb.php?table=roles"); 
+                header("Location: cosmodb.php?table=roles&change_column=$column_to_search"); 
             } elseif (isset($_REQUEST['add_row'])) {?>
                     <p class="h5 text-danger mt-3">Заполните все поля</p>
             <?php
@@ -342,7 +342,7 @@ function edit () {
                 }
                 $log_data = json_encode($log_data_end, JSON_UNESCAPED_UNICODE |JSON_PRETTY_PRINT);       
                 file_put_contents($json_log_dir, $log_data);
-                header("Location: cosmodb.php?table=people");
+                header("Location: cosmodb.php?table=people&change_column=$column_to_search");
             } elseif (isset($_REQUEST['add_row'])) {?>
                     <p class="h5 text-danger mt-3">Заполните все поля</p>
             <?php
@@ -360,7 +360,7 @@ function edit () {
     }
 }
 function forms ($action) {
-    global $id_change_form, $table, $refer, $conn, $select_query, $user_role, $user_name;
+    global $id_change_form, $table, $refer, $conn, $select_query, $user_role, $user_name, $column_to_search;
     if($action == 'Добавить строку') {
         $html_query = "table=".$table."action=".$action;
     } else {
@@ -456,112 +456,111 @@ function forms ($action) {
                         }
                     }
                     $row = $conn->query($select_where)->fetch();
+                    unset($row[0]);
                     foreach($row as $key => $value) {
-                        if ($key!=0) {
-                        switch ($key) {
-                            case (is_string($key)&&$key!='Текст'&&!isset($word_value[$key])&&$key!='#'&&!is_numeric($value)&&$key!=0&&$key!='Дата'):
-                                ?>
-                                <div class="row mb-3 px-3">
-                                <label class="form-label" for="<?=$input_names[$key]?>"><?=$key?></label>
-                                <input 
-                                type="text" 
-                                class="form-control"
-                                id="<?=$input_names[$key]?>"
-                                name="<?=$input_names[$key]?>" 
-                                value="<?=$value?>"/>
-                                </div>
-                                <?php
-                                break;
-                            case (is_string($key)&&is_numeric($value)&&!isset($word_value[$key])):
-                                ?>
-                                <div class="row mb-3 px-3">
-                                <label class="form-label" for="id_change_form[]"><?=$key?></label>
-                                <input type="text" 
-                                class="form-control"
-                                id="id_change_form[]"
-                                name="id_change_form[]" 
-                                value="<?=$value?>" 
-                                readonly/>
-                                </div>
-                                <?php
-                                break;
-                            case (is_string($key)&&$key=='Текст'&&!isset($word_value[$key])):
-                                ?>
-                                <div class="row mb-3 px-3">
-                                <label class="form-label" for="<?=$input_names[$key]?>"><?=$key?></label>
-                                <textarea
-                                class="form-control"
-                                id="<?=$input_names[$key]?>"
-                                name="<?=$input_names[$key]?>"
-                                rows="10">
-                                <?=trim($value)?>
-                                </textarea>
-                                </div>
-                                <?php
-                                break;
-                            case (is_string($key)&&$key=='Дата'&&!isset($word_value[$key])):
-                                ?>
-                                <div class="row mb-3 px-3">
-                                <label class="form-label" for="<?=$input_names[$key]?>"><?=$key?></label>
-                                <input type="date"
-                                class="form-control"
-                                id="<?=$input_names[$key]?>"
-                                name="<?=$input_names[$key]?>"
-                                value="<?=$value?>"/>
-                                </div>
-                                <?php
-                                break;
-                            case (is_string($key)&&isset($word_value[$key])):
-                                ?>
-                                <div class="row mb-3 px-3">
-                                <label class="form-label" for="<?=$input_names[$key]?>"><?=$key?></label>
-                                <select name="<?=$input_names[$key]?>" class="form-select">
-                                <?php
-                                if ($key!='Страна') {?>
-                                <option value="0"><?=$value?></option><?php
-                                }
-                                switch ($word_value[$key]) {
-                                    case "roles":
-                                        $sql = "SELECT * FROM roles";
-                                        $result = $conn->query($sql);
-                                        while ($row = $result->fetch()) {
-                                            if ($row['role_name']!=$value) {?>
-                                                <option value="<?=$row['id']?>"><?=$row['role_name']?></option><?php
-                                            }
-                                        }
-                                        break;
-                                    case "country":
-                                        if($value==1) {?>
-                                            <option value="0">СССР</option><option value="2">Россия</option><?php
-                                        } else {?>
-                                            <option value="0">Россия</option><option value="1">СССР</option><?php
-                                        }
-                                        break;
-                                    case "people":
-                                        $sql = "SELECT * FROM people";
-                                        $result = $conn->query($sql);
-                                        while ($row = $result->fetch()) {
-                                            if ($row['initials']!=$value) {?>
-                                                <option value="<?=$row['id']?>"><?=$row['initials']?></option><?php
-                                            }
-                                        }
-                                        break;
-                                    case "app_types":
-                                        $sql = "SELECT * FROM app_types";
-                                        $result = $conn->query($sql);
-                                        while ($row = $result->fetch()) {
-                                            if ($row['type']!=$value) {?>
-                                                <option value="<?=$row['id']?>"><?=$row['type']?></option><?php
-                                            }
-                                        }
-                                        break;
-                                }?>
-                                </select>
-                            </label>
+                    switch ($key) {
+                        case (is_string($key)&&$key!='Текст'&&!isset($word_value[$key])&&$key!='#'&&!is_numeric($value)&&$key!=0&&$key!='Дата'):
+                            ?>
+                            <div class="row mb-3 px-3">
+                            <label class="form-label" for="<?=$input_names[$key]?>"><?=$key?></label>
+                            <input 
+                            type="text" 
+                            class="form-control"
+                            id="<?=$input_names[$key]?>"
+                            name="<?=$input_names[$key]?>" 
+                            value="<?=$value?>"/>
                             </div>
-                                <?php
-                                break;
+                            <?php
+                            break;
+                        case (is_string($key)&&is_numeric($value)&&!isset($word_value[$key])):
+                            ?>
+                            <div class="row mb-3 px-3">
+                            <label class="form-label" for="id_change_form[]"><?=$key?></label>
+                            <input type="text" 
+                            class="form-control"
+                            id="id_change_form[]"
+                            name="id_change_form[]" 
+                            value="<?=$value?>" 
+                            readonly/>
+                            </div>
+                            <?php
+                            break;
+                        case (is_string($key)&&$key=='Текст'&&!isset($word_value[$key])):
+                            ?>
+                            <div class="row mb-3 px-3">
+                            <label class="form-label" for="<?=$input_names[$key]?>"><?=$key?></label>
+                            <textarea
+                            class="form-control"
+                            id="<?=$input_names[$key]?>"
+                            name="<?=$input_names[$key]?>"
+                            rows="10">
+                            <?=trim($value)?>
+                            </textarea>
+                            </div>
+                            <?php
+                            break;
+                        case (is_string($key)&&$key=='Дата'&&!isset($word_value[$key])):
+                            ?>
+                            <div class="row mb-3 px-3">
+                            <label class="form-label" for="<?=$input_names[$key]?>"><?=$key?></label>
+                            <input type="date"
+                            class="form-control"
+                            id="<?=$input_names[$key]?>"
+                            name="<?=$input_names[$key]?>"
+                            value="<?=$value?>"/>
+                            </div>
+                            <?php
+                            break;
+                        case (is_string($key)&&isset($word_value[$key])):
+                            ?>
+                            <div class="row mb-3 px-3">
+                            <label class="form-label" for="<?=$input_names[$key]?>"><?=$key?></label>
+                            <select name="<?=$input_names[$key]?>" class="form-select">
+                            <?php
+                            if ($key!='Страна') {?>
+                            <option value="0"><?=$value?></option><?php
                             }
+                            switch ($word_value[$key]) {
+                                case "roles":
+                                    $sql = "SELECT * FROM roles";
+                                    $result = $conn->query($sql);
+                                    while ($row = $result->fetch()) {
+                                        if ($row['role_name']!=$value) {?>
+                                            <option value="<?=$row['id']?>"><?=$row['role_name']?></option><?php
+                                        }
+                                    }
+                                    break;
+                                case "country":
+                                    if($value==1) {?>
+                                        <option value="0">СССР</option><option value="2">Россия</option><?php
+                                    } else {?>
+                                        <option value="0">Россия</option><option value="1">СССР</option><?php
+                                    }
+                                    break;
+                                case "people":
+                                    $sql = "SELECT * FROM people";
+                                    $result = $conn->query($sql);
+                                    while ($row = $result->fetch()) {
+                                        if ($row['initials']!=$value) {?>
+                                            <option value="<?=$row['id']?>"><?=$row['initials']?></option><?php
+                                        }
+                                    }
+                                    break;
+                                case "app_types":
+                                    $sql = "SELECT * FROM app_types";
+                                    $result = $conn->query($sql);
+                                    while ($row = $result->fetch()) {
+                                        if ($row['type']!=$value) {?>
+                                            <option value="<?=$row['id']?>"><?=$row['type']?></option><?php
+                                        }
+                                    }
+                                    break;
+                            }?>
+                            </select>
+                        </label>
+                        </div>
+                            <?php
+                            break;
                         }
                     }
                 }
@@ -608,7 +607,7 @@ function forms ($action) {
                 }
                 $log_data = json_encode($log_data_end, JSON_UNESCAPED_UNICODE |JSON_PRETTY_PRINT);       
                 file_put_contents($json_log_dir, $log_data);
-                header("Location: cosmodb.php?table=$table");
+                header("Location: cosmodb.php?table=$table&column_name=$column_to_search");
                 exit();
             }
             
@@ -673,7 +672,7 @@ function forms ($action) {
                 }
                 $log_data = json_encode($log_data_end, JSON_UNESCAPED_UNICODE |JSON_PRETTY_PRINT);       
                 file_put_contents($json_log_dir, $log_data);
-                header("Location: cosmodb.php?table=$table");
+                header("Location: cosmodb.php?table=$table&column_name=$column_to_search");
                 exit();
             } 
             break;
@@ -685,7 +684,7 @@ function forms ($action) {
             } else {
                 $sql = $_REQUEST['sql'];
                 $conn -> exec($sql);
-                header("Location: cosmodb.php?table=$table");
+                header("Location: cosmodb.php?table=$table&column_name=$column_to_search");
                 exit();
             }
             break;
@@ -721,7 +720,7 @@ function forms ($action) {
                 }
                 $log_data = json_encode($log_data_end, JSON_UNESCAPED_UNICODE |JSON_PRETTY_PRINT);       
                 file_put_contents($json_log_dir, $log_data);
-                header("Location: cosmodb.php?table=users");
+                header("Location: cosmodb.php?table=users&column_name=$column_to_search");
                 exit();
             }
             break;
@@ -742,11 +741,11 @@ function forms ($action) {
             }
             $log_data = json_encode($log_data_end, JSON_UNESCAPED_UNICODE |JSON_PRETTY_PRINT);       
             file_put_contents($json_log_dir, $log_data);
-            header("Location: cosmodb.php?table=users");
+            header("Location: cosmodb.php?table=users&column_name=$column_to_search");
             exit();
             break;
         default:
-            header("Location: cosmodb.php?table=$table");
+            header("Location: cosmodb.php?table=$table&column_name=$column_to_search");
             break;
     }
 ?></form></main><?php

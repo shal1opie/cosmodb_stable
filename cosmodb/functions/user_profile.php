@@ -47,8 +47,8 @@ function user_profile () {
             }
             ?>
         </div>
-        <div class="row">
-            <div class="table-responsive border border-primary rounded-4 px-0" data-simplebar>
+        <div class="row vh-100">
+            <div class="table-responsive border border-primary rounded-4 px-0" data-simplebar style="max-height: 50vh;">
                 <table class="table table-hover table-striped mb-0">
                     <?php
                     if (isset($_REQUEST['back_up'])) {
@@ -170,13 +170,13 @@ function user_profile () {
                     echo $e->getMessage();
                 }
     ?>
-    <div class="row">
+    <!-- <div class="row">
         <div class="col-3">
-            <div class="card border border-primary rounded-4">
+            <div class="card border border-primary rounded-4"> -->
                 <!-- <img src="../profile_imgs/photo_2024-04-05_21-35-52.jpg" class="mt-2 object-fit-cover mx-auto rounded-circle" id="profile_pic" alt="..."> -->
-                <div class="card-body">
-                    <p class="h4 card-title">Логин: <?= $user_name ?></p>
-                    <p class="card-text">Роль: <?= $user_roles[$user_role] ?></p>
+                <!-- <div class="card-body">
+                    <p class="h4 card-title">Логин:</p>
+                    <p class="card-text">Роль:</p>
                     <a href="cosmodb.php?logout=1"
                     role="button" 
                     class="btn btn-danger"
@@ -185,8 +185,9 @@ function user_profile () {
                     </svg></a>
                 </div>
             </div>
-        </div>
-        <div class="col-9 border border-primary rounded-4 px-0">
+        </div> -->
+        <div class="row">
+        <div class="col border border-primary rounded-4 px-0">
             <form action="cosmodb.php?user_profile=<?= $user_name ?>" method="post">
                 <div class="row">
                     <div class="col">
@@ -196,8 +197,9 @@ function user_profile () {
                     </div>
                 </div>
                 <div class="row mt-3 mb-3 px-4">
-                    <label class="col-sm-3 col-form-label text-end" for="profile_edit_login">Логин</label>
-                    <div class="col">
+                    <!-- <label class="col-sm-3 col-form-label text-end" for="profile_edit_login">Логин</label> -->
+                    <div class="input-group">
+                        <span class="input-group-text">Логин</span>
                         <input type="text"
                         class="form-control"
                         id="profile_edit_login"
@@ -207,8 +209,9 @@ function user_profile () {
                 </div>
 
                 <div class="row mb-3 px-4">
-                    <label class="col-sm-3 col-form-label text-end" for="profile_edit_email">Эл почта</label>
-                    <div class="col">
+                    <!-- <label class="col-sm-3 col-form-label text-end" for="profile_edit_email">Эл почта</label> -->
+                    <div class="input-group">
+                        <span class="input-group-text">Эл почта</span>
                         <input type="text"
                         class="form-control"
                         id="profile_edit_email"
@@ -217,24 +220,26 @@ function user_profile () {
                     </div>
                 </div>
                 <div class="row mb-3 px-4">
-                    <label class="col-sm-3 col-form-label text-end" for="profile_edit_password">Изменить пароль</label>
-                    <div class="col">
+                    <!-- <label class="col-sm-3 col-form-label text-end" for="profile_edit_password">Изменить пароль</label> -->
+                    <div class="input-group">
+                        <span class="input-group-text">Изменить пароль</span>
                         <input type="password"
                         class="form-control"
                         id="profile_edit_password"
                         name="profile_edit_password"
                         aria-describedby="help_block"/>
+                    </div>
                         <div id="help_block" class="form-text">
                         Смена логина, почты и/или пароля приводит к окончанию текущей сессии, придется заходить заново
                         </div>
-                    </div>
                 </div>
                 <?php
                 if ($profile_role_raise == $user_role) {
                 ?>
                 <div class="row mb-3 px-4">
-                    <label class="col-sm-3 col-form-label text-end" for="profile_edit_role">Запросить роль</label>
-                    <div class="col">
+                    <!-- <label class="col-sm-3 col-form-label text-end" for="profile_edit_role">Запросить роль</label> -->
+                    <div class="input-group">
+                        <span class="input-group-text">Запросить роль</span>
                         <select type="password"
                         class="form-select"
                         id="profile_edit_role"
