@@ -314,18 +314,24 @@ try {
                             </td>
                         </tr>
                         <?php
-                    }
-                ?>
+                        
+                    }?>
+
+
                     </tbody>
                 </table>
-            </div>
-            <div class="modal-footer d-flex justify-content-center border-0 px-0 pb-3 pt-1">
+                                                <div class="modal-footer d-flex justify-content-center border-0 px-0 pb-3 pt-1">
                 <button type="button" class="btn btn-primary" data-bs-dismiss="modal">Закрыть</button>
 
             </div>
             </div>
+
+            </div>
         </div>
     </div>
+                <?php
+                }
+                ?>
     <?php
         foreach ($delete_ids as $id) {?>
                     <div class="modal fade" id="delete_modal_<?=$id?>" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="delete_modal_<?=$id?>_Label" aria-hidden="true">
@@ -352,7 +358,7 @@ try {
                 </div>
     <?php
         }
-    }
+    // }
 } catch(PDOException $e) {
     echo database_eror();
 }
