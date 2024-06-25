@@ -69,13 +69,11 @@ function user_profile () {
                         ?>
                             <td class="text-center"><?= $file_date ?></td>
                             <td class="text-center">
-                                Поставить базу данных
                                 <a href="../back_up/<?= $value ?>" 
                                 download="<?= $value ?>" 
                                 class="text-decoration-none text-dark">
                                     <?= $value ?>
                                 </a>
-                                Удалить
                             </td>
                         </tr>
                         <?php
