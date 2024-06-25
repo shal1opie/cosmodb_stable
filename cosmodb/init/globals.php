@@ -51,7 +51,7 @@ switch ($user_role) {
         unset($tables[2]);
         unset($tables[3]);
         break;
-    case 2:
+    case 4:
         unset($tables[2]);
         unset($tables[3]);
         break;
@@ -116,7 +116,7 @@ switch ($table) {
 
     case 'space_achiv':
         $order_by = " ORDER BY space_achiv.id";
-        $select_query = "SELECT space_achiv.id AS `#`, `country` AS `Страна`, people.initials AS `Причастное лицо`,
+        $select_query = "SELECT space_achiv.id AS `#`, `country` AS `Страна`, people.initials AS `Знаковая личность`,
         `achiv_name` AS `Наименование`, `date` AS `Дата`, `text` AS `Текст`, app_types.type AS 'Тип аппарата'".$select_query."
         INNER JOIN people ON space_achiv.people = people.id
         INNER JOIN app_types ON space_achiv.type_app = app_types.id".$order_by;

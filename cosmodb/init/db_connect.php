@@ -23,9 +23,9 @@ try {
     if ($_SESSION['db_maded']) {
         unset($_SESSION['db_maded']);
         $_SESSION['db_exists'] = true;
-        session_unset(); // Unset all session variables
-        session_destroy(); // Destroy the session
-        session_start(); // Start a new session
+        session_unset();
+        session_destroy();
+        session_start();
         header("Location: ../main/cosmodb.php?auto_reg_form=Регистрация");
         exit();
     }

@@ -1,4 +1,16 @@
 <?php
+function add_log ($log_data) {
+    $json_log_dir = '../init/logs.json';
+    if(file_exists($json_log_dir)) {
+        $log_data_end = json_decode(file_get_contents($json_log_dir), true);
+        $log_data_end[] = $log_data;
+    } else {
+        $log_data_end[] = $log_data;
+    }
+    $log_data = json_encode($log_data_end, JSON_UNESCAPED_UNICODE |JSON_PRETTY_PRINT);       
+    file_put_contents($json_log_dir, $log_data);
+}
+
 function edit () {
     global $conn, $table, $id_change_form, $insert_query, $action, $user_role, $user_name, $column_to_search;
     $log_data = [
@@ -8,13 +20,8 @@ function edit () {
         'action' => $action,
         'time' => date('d.m.Y H:i:s')
     ];
-    // $log_data = json_encode($log_data, JSON_UNESCAPED_UNICODE |JSON_PRETTY_PRINT);
-    // $log_data = $log_data . ",\n";
-    $json_log_dir = '../init/logs.json';
+
     switch (true) {
-        // case (!empty($id_change_form)):
-        //     var_dump($id_change_form);
-        //     break;
         case (empty($id_change_form)&&$table=='space_achiv'):
             ?>
             <legend class="h1 text-center text-primary mt-3">Добавление космического достижения</legend>
@@ -39,7 +46,7 @@ function edit () {
             </select>
             </div>
             <div class="row mb-3 px-3">
-            <label class="form-label" for="people">Причастное лицо</label>
+            <label class="form-label" for="people">Знаковая личность</label>
             <select 
             class="form-select"
             id = "people"
@@ -89,14 +96,7 @@ function edit () {
                     } catch(PDOException $e) {
                         echo $e->getMessage();
                     }
-                if(file_exists($json_log_dir)) {
-                    $log_data_end = json_decode(file_get_contents($json_log_dir), true);
-                    $log_data_end[] = $log_data;
-                } else {
-                    $log_data_end[] = $log_data;
-                }
-                $log_data = json_encode($log_data_end, JSON_UNESCAPED_UNICODE |JSON_PRETTY_PRINT);       
-                file_put_contents($json_log_dir, $log_data);
+                add_log($log_data);
                 header("Location: cosmodb.php");
             } elseif(isset($_REQUEST['add_row'])) {?>
                     <p class="h5 text-danger mt-3">Заполните все поля</p>
@@ -174,14 +174,7 @@ function edit () {
                     } catch(PDOException $e) {
                         echo $e->getMessage();
                     }
-                    if(file_exists($json_log_dir)) {
-                        $log_data_end = json_decode(file_get_contents($json_log_dir), true);
-                        $log_data_end[] = $log_data;
-                    } else {
-                        $log_data_end[] = $log_data;
-                    }
-                    $log_data = json_encode($log_data_end, JSON_UNESCAPED_UNICODE |JSON_PRETTY_PRINT);       
-                    file_put_contents($json_log_dir, $log_data);
+                    add_log($log_data);
                     header("Location: ../main/cosmodb.php?table=users&change_column=$column_to_search");
                 } else {
                     echo "<small class=\"pico-color-red-500\">Такой пользователь уже существует!</small>";
@@ -221,14 +214,7 @@ function edit () {
                 } catch(PDOException $e) {
                     echo $e->getMessage();
                 }
-                if(file_exists($json_log_dir)) {
-                    $log_data_end = json_decode(file_get_contents($json_log_dir), true);
-                    $log_data_end[] = $log_data;
-                } else {
-                    $log_data_end[] = $log_data;
-                }
-                $log_data = json_encode($log_data_end, JSON_UNESCAPED_UNICODE |JSON_PRETTY_PRINT);       
-                file_put_contents($json_log_dir, $log_data);
+                add_log($log_data);
                 header("Location: cosmodb.php?table=app_types&change_column=$column_to_search");
             } elseif (isset($_REQUEST['add_row'])) {?>
                     <p class="h5 text-danger mt-3">Заполните все поля</p>
@@ -264,14 +250,7 @@ function edit () {
                 } catch(PDOException $e) {
                     echo $e->getMessage();
                 }
-                if(file_exists($json_log_dir)) {
-                    $log_data_end = json_decode(file_get_contents($json_log_dir), true);
-                    $log_data_end[] = $log_data;
-                } else {
-                    $log_data_end[] = $log_data;
-                }
-                $log_data = json_encode($log_data_end, JSON_UNESCAPED_UNICODE |JSON_PRETTY_PRINT);       
-                file_put_contents($json_log_dir, $log_data);
+                add_log($log_data);
                 header("Location: cosmodb.php?table=roles&change_column=$column_to_search"); 
             } elseif (isset($_REQUEST['add_row'])) {?>
                     <p class="h5 text-danger mt-3">Заполните все поля</p>
@@ -334,14 +313,7 @@ function edit () {
                 } catch(PDOException $e) {
                     echo $e->getMessage();
                 }
-                if(file_exists($json_log_dir)) {
-                    $log_data_end = json_decode(file_get_contents($json_log_dir), true);
-                    $log_data_end[] = $log_data;
-                } else {
-                    $log_data_end[] = $log_data;
-                }
-                $log_data = json_encode($log_data_end, JSON_UNESCAPED_UNICODE |JSON_PRETTY_PRINT);       
-                file_put_contents($json_log_dir, $log_data);
+                add_log($log_data);
                 header("Location: cosmodb.php?table=people&change_column=$column_to_search");
             } elseif (isset($_REQUEST['add_row'])) {?>
                     <p class="h5 text-danger mt-3">Заполните все поля</p>
@@ -376,9 +348,6 @@ function forms ($action) {
             'time' => date('d.m.Y H:i:s')
         ];
     }
-    // $log_data = json_encode($log_data, JSON_UNESCAPED_UNICODE | JSON_PRETTY_PRINT);
-    // $log_data = $log_data . ",\n";
-    $json_log_dir = '../init/logs.json';
     ?>
 <main class="container mb-5 mt-5 border border-primary rounded-4 ">
     <form action="cosmodb.php?<?= $html_query?>&action=<?=$action?>" method="post">
@@ -433,7 +402,7 @@ function forms ($action) {
                         "Роль" => "role_name[]",
                         "Тип" => "type[]",
                         "Страна" => "country[]",
-                        "Причастное лицо" => "people[]",
+                        "Знаковая личность" => "people[]",
                         "Наименование" => "achiv_name[]",
                         "Дата" => "date[]",
                         "Текст" => "text[]",
@@ -443,7 +412,7 @@ function forms ($action) {
                     $words_to_find = [
                         "Роль" => "roles",
                         "Страна" => "country",
-                        "Причастное лицо" => "people",
+                        "Знаковая личность" => "people",
                         "Запрашиваемая роль" => "roles",
                         "Роль пользователя" => "roles",
                         "Тип аппарата" => "app_types"
@@ -452,7 +421,6 @@ function forms ($action) {
                         $pos = strpos($select_query, $word);
                         if ($pos !== false) {
                             $word_value[$key_name] = $word;
-                            //echo $word_value[$key_name]."<br />";
                         }
                     }
                     $row = $conn->query($select_where)->fetch();
@@ -599,14 +567,7 @@ function forms ($action) {
                     }
                 }
             }
-                if(file_exists($json_log_dir)) {
-                    $log_data_end = json_decode(file_get_contents($json_log_dir), true);
-                    $log_data_end[] = $log_data;
-                } else {
-                    $log_data_end[] = $log_data;
-                }
-                $log_data = json_encode($log_data_end, JSON_UNESCAPED_UNICODE |JSON_PRETTY_PRINT);       
-                file_put_contents($json_log_dir, $log_data);
+                add_log($log_data);
                 header("Location: cosmodb.php?table=$table&column_name=$column_to_search");
                 exit();
             }
@@ -664,14 +625,7 @@ function forms ($action) {
                 } catch(PDOException $e) {
                     echo $e->getMessage();
                 }
-                if(file_exists($json_log_dir)) {
-                    $log_data_end = json_decode(file_get_contents($json_log_dir), true);
-                    $log_data_end[] = $log_data;
-                } else {
-                    $log_data_end[] = $log_data;
-                }
-                $log_data = json_encode($log_data_end, JSON_UNESCAPED_UNICODE |JSON_PRETTY_PRINT);       
-                file_put_contents($json_log_dir, $log_data);
+                add_log($log_data);
                 header("Location: cosmodb.php?table=$table&column_name=$column_to_search");
                 exit();
             } 
@@ -712,14 +666,7 @@ function forms ($action) {
                 } catch(PDOException $e) {
                     echo $e->getMessage();
                 }
-                if(file_exists($json_log_dir)) {
-                    $log_data_end = json_decode(file_get_contents($json_log_dir), true);
-                    $log_data_end[] = $log_data;
-                } else {
-                    $log_data_end[] = $log_data;
-                }
-                $log_data = json_encode($log_data_end, JSON_UNESCAPED_UNICODE |JSON_PRETTY_PRINT);       
-                file_put_contents($json_log_dir, $log_data);
+                add_log($log_data);
                 header("Location: cosmodb.php?table=users&column_name=$column_to_search");
                 exit();
             }
@@ -733,14 +680,7 @@ function forms ($action) {
             } catch(PDOException $e) {
                 echo $e->getMessage();
             }
-            if(file_exists($json_log_dir)) {
-                $log_data_end = json_decode(file_get_contents($json_log_dir), true);
-                $log_data_end[] = $log_data;
-            } else {
-                $log_data_end[] = $log_data;
-            }
-            $log_data = json_encode($log_data_end, JSON_UNESCAPED_UNICODE |JSON_PRETTY_PRINT);       
-            file_put_contents($json_log_dir, $log_data);
+            add_log($log_data);
             header("Location: cosmodb.php?table=users&column_name=$column_to_search");
             exit();
             break;

@@ -57,7 +57,7 @@ function change_table () {
         "last_name" => "Отчество",
         "role_name" => "Роль",
         "country" => "Страна",
-        "people" => "Причастное лицо",
+        "people" => "Знаковые личности",
         "achiv_name" => "Наименование",
         "date" => "Дата",
         "text" => "Полнотекстовый поиск",
@@ -68,7 +68,6 @@ function change_table () {
         "email" => "Электронная почта",
     ];
     $columns = get_columns_from_table($table);
-    // var_dump($columns);
     switch (true) {
         case (!isset($_REQUEST['action'])&&$user_loged_in&&$user_role!=0&&!isset($_REQUEST['user_profile'])&&!isset($_REQUEST['article'])):
     ?>
@@ -238,7 +237,7 @@ function change_table () {
                         <img src="../image/logo.svg" class ="img-fluid" alt="logo">
                     </div>
                     <div class="col d-flex justify-content-end align-items-end">
-                        <a href="<?= $user_role==1?"cosmodb.php":"cosmodb.php?table=$table&column_name=$column_to_search"?>"
+                        <a href="cosmodb.php?table=<?=$table?>&column_name=<?=$column_to_search?>"
                         role="button"
                         class="btn btn-outline-primary fs-3 mb-3"
                         >Вернуться</a>

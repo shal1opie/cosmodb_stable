@@ -152,12 +152,12 @@ function additional_set_up ($auto_reg_form) {
                             $_SESSION['user_name'] = $row["nick_name"];
                             header("Location: cosmodb.php");
                         } else {?>
-                        <p class="h5 text-danger mt-3">Неправильный пароль</p>
+                        <p class="h5 text-danger mt-3">Неверный пароль</p>
                             <?php
                         }
                     }
                 } else { ?>
-                        <p class="h5 text-danger mt-3">Неправильный пароль</p>
+                        <p class="h5 text-danger mt-3">Пользователя с таким логином не существует или неверный пароль</p>
                 <?php
                 }
             } elseif (isset($_REQUEST['enter'])) { ?>

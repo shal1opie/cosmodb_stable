@@ -30,17 +30,15 @@ require_once('../functions/article.php');
 require_once('../functions/user_profile.php');
 
 function reset_session () {
-    session_unset(); // Unset all session variables
-    session_destroy(); // Destroy the session
-    session_start(); // Start a new session
+    session_unset();
+    session_destroy();
+    session_start();
 }
 
 
 
 function main () {
     global $table, $db_exists, $users_set, $user_loged_in, $user_role, $article, $user_admin_exists, $tables, $column_to_search;
-    // var_dump($_SESSION);
-    // echo "<br>".$_SESSION['role']."<br>";
     switch (true) {
         case (isset($_REQUEST['action'])&&$db_exists&&$users_set&&$user_loged_in&&$user_role>0&&!isset($_REQUEST['logout'])&&!isset($_REQUEST['user_profile'])):
             change_table();

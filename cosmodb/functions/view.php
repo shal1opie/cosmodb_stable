@@ -48,7 +48,7 @@ function view_table ($table) {
         "users" => "Пользователи",
     ];
     switch ($user_role) {
-        case "2":
+        case "4":
             unset($table_names["app_types"]);
             unset($table_names["people"]);
             break;
@@ -76,8 +76,10 @@ function view_table ($table) {
     ?>
             </div>
             <div class="col d-flex justify-content-end px-0 mb-1">
-                <a href="cosmodb.php?table=<?= $table ?>&action=Добавить+строку" role="button" class="btn btn-outline-primary rounded-3">+</a>
+                <?php if ($user_role == 4 && $table == 'space_achiv') { } else {?>
+                <a href="cosmodb.php?table=<?= $table ?>&action=Добавить+строку" role="button" class="btn btn-outline-primary rounded-3 px-3 py-2 ">+</a>
                 <?php
+                }
                 if($table == 'users') {
                     $modal_users = [];
                     $sql_search_pending_users = "SELECT `role`, `role_raise` FROM `users` WHERE `role` != `role_raise`";
@@ -105,7 +107,6 @@ function view_table ($table) {
     } else {
         $final_query = $select_query;
     }
-    // var_dump($final_query);
 try {
     $result = $conn -> query($final_query);
     ?>
@@ -133,11 +134,7 @@ try {
             switch (true) {
                 case (is_string($key)&&$key=='#'):
                     $id=$value;
-                    // if($table=='users'&&$id==1) {
                         echo "<td class=\"text-center\">$value</td>";
-                    // } else {
-                    //     echo "<td class=\"px-0 text-center form-check-input\"><input class=\"input_m\" type=\"checkbox\" name=\"id_change_form[]\" value=\"$value\" readonly />$value</td>";
-                    // }
                     break;
                 case (is_string($key)&&$length<150&&$key!='Страна'&&$key!='Дата'):
                     if($key =='Наименование') {
@@ -150,10 +147,6 @@ try {
                         echo "<td class=\"text-center\">$value</td>";
                     }
                     break;
-                // case (is_string($key)&&$length>150):
-                //     $substr=mb_substr($value,0,30,'UTF-8');
-                //     echo "<td >$substr... <a href=\"cosmodb.php?article=$id\">Прочесть статью</a></td>";
-                //     break;
                 case ($table=='space_achiv'&&is_string($key)&&$key=="Страна"):
                     if($value==1) {
                         echo "<td class=\"text-center\">СССР</td>";
@@ -178,7 +171,7 @@ try {
             } else {
                 if ($table == 'space_achiv') {
             ?>
-            <a href="cosmodb.php?article=<?=$id?>" 
+            <a href="cosmodb.php?article=<?=$id?>&column_name=<?=$column_to_search?>" 
             role="button" 
             class="btn btn-success px-1 py-1 d-inline-flex align-items-center justify-content-center px-2 py-2 me-1">
                 <svg width="24" height="20" viewBox="0 0 16 12" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -216,6 +209,8 @@ try {
 
                 <?php
             }
+            if ($user_role == 4 && $table == "space_achiv") {
+            } else {
             ?>
             <a href="cosmodb.php?table=<?= $table ?>&id_change_form%5B%5D=<?=$id?>&action=Редактировать+выбранное"
             role="button"
@@ -252,6 +247,8 @@ try {
         </td>
 
         <?php
+                        
+                }
             }
         echo "</tr>";
 
@@ -358,7 +355,6 @@ try {
                 </div>
     <?php
         }
-    // }
 } catch(PDOException $e) {
     echo database_eror();
 }
@@ -382,14 +378,8 @@ function view_cards () {
         while ($row = $result -> fetch()) {
             ?>
             <div class="col d-flex justify-content-center">
-            <?php
-            // $card_text = explode(" ",$row['text'], 9);
-            // unset($card_text[8]);
-            // $card_text = implode(" ",$card_text)."...";
-            ?>
-
                     <div class="card w-100" style="height: 18rem;">
-                        <img src="../image/placeholder.jpg" 
+                        <img src="../image/placeholder_<?=$row['#']?>.jpg" 
                         class="card-img-top 
                         overflow-hidden 
                         object-fit-cover
@@ -398,7 +388,7 @@ function view_cards () {
                         alt="...">
                         <div class="card-body d-flex flex-column h-100 mt-auto">
                             <p class="card-title fs-5"><?=$row['Наименование']?></p>
-                            <a href="cosmodb.php?article=<?=$row['#']?>" class="btn btn-primary stretched-link mt-auto">Прочесть статью</a>
+                            <a href="cosmodb.php?article=<?=$row['#']?>&column_name=<?=$column_to_search?>" class="btn btn-primary stretched-link mt-auto">Прочесть статью</a>
                         </div>
                     </div>
 
