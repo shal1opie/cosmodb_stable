@@ -81,7 +81,6 @@ CREATE TABLE `roles` (
 
 INSERT INTO `roles` (`id`, `role_name`) VALUES
 (1, 'Пользователь'),
-(2, 'Модератор'),
 (3, 'Оператор БД'),
 (4, 'Администратор');
 
